@@ -1,0 +1,12 @@
+demo:
+- guiyin
+- hello
+excel:
+  file: cases.xlsx
+  sheet: login
+logger:
+  file: python25.txt
+  level: DEBUG
+  name: 修改
+request:
+  method: ${data}

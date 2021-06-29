@@ -1,0 +1,18 @@
+code: '1001'
+data:
+- id: 80
+  leavemount: '0.00'
+  mobilephone: '13691579846'
+  pwd: QW&@JBK!#&#($*@HLNN
+  regname: toml
+  regtime: '2019-08-14 20:24:45.0'
+  type: '1'
+- id: 81
+  leavemount: '0.00'
+  mobilephone: '13691579846'
+  pwd: QW&@JBK!#&#($*@HLNN
+  regname: toml
+  regtime: '2019-08-14 20:24:45.0'
+  type: '1'
+msg: 获取用户列表成功
+status: 1
