@@ -114,6 +114,7 @@ class CommBase(Driver):
                 timeout=timeout,  # 超时时间
                 poll_frequency=poll_frequency  # 轮询时间
             ).until(EC.visibility_of_element_located(locator))
+            self.__highlight(element)
             return element
         except Exception as e:
             log.error(f"等待元素{locator}可见失败！ \n", e)
@@ -127,11 +128,13 @@ class CommBase(Driver):
         判断某个元素中是否可见并且是enable的，代表可点击
         """
         try:
-            return WebDriverWait(
+            element = WebDriverWait(
                 driver=self.driver,  # 浏览器驱动对象
                 timeout=timeout,  # 超时时间
                 poll_frequency=poll_frequency  # 轮询时间
             ).until(EC.element_to_be_clickable(locator))
+            self.__highlight(element)
+            return element
         except Exception as e:
             log.error(f"元素{locator}可点击失败 \n", e)
             self.save_img("等待可点击失败")
@@ -144,11 +147,13 @@ class CommBase(Driver):
         等待元素存在
         """
         try:
-            return WebDriverWait(
+            element = WebDriverWait(
                 driver=self.driver,  # 浏览器驱动对象
                 timeout=timeout,  # 超时时间
                 poll_frequency=poll_frequency  # 轮询时间
             ).until(EC.presence_of_element_located(locator))
+            self.__highlight(element)
+            return element
         except Exception as e:
             log.info(f"等待元素{locator}存在失败！\n", e)
             self.save_img(f"等待存在失败")
@@ -177,11 +182,13 @@ class CommBase(Driver):
                               timeout=data["time"]["test_out"],
                               poll_frequency=data["time"]["poll_time"]):
         try:
-            return WebDriverWait(
+            element = WebDriverWait(
                 driver=self.driver,  # 浏览器驱动对象
                 timeout=timeout,  # 超时时间
                 poll_frequency=poll_frequency  # 轮询时间
             ).until(EC.text_to_be_present_in_element(locator, text))
+            self.__highlight(element)
+            return element
         except Exception as e:
             log.info('判断元素{}中包含{}失败！'.format(locator, text))
             raise e
@@ -210,6 +217,46 @@ class CommBase(Driver):
             file_name = os.path.join(img_path, name + "_" + str(now_time) + ".png")
             self.driver.get_screenshot_as_file(file_name)
             log.info(f"截取网页成功。文件名称为：{file_name}")
+
+    #点击操作
+    def click(self, locator, n=99):
+        element = self.find_element(locator, n)
+        if element.is_enabled():
+            try:
+                element.click()
+            except Exception as e:
+                log.error(f"点击元素{locator}失败!")
+                self.save_img("点击失败")
+                raise e
+
+    #查找元素后清除默认文本内容
+    def clear(self, locator):
+        try:
+            return self.driver.find_element(*locator).clear()
+        except Exception as e:
+            log.error(f"清除元素{locator}的默认文本失败!")
+            raise e
+
+    #输入操作
+    def send_keys(self, locator, text, n=99):
+        element = self.find_element(locator, n)
+        element.clear()
+        try:
+            element.send_keys(text)
+        except Exception as e:
+            log.error(f"在元素{locator}输入内容失败!")
+            self.save_img("输入失败")
+            raise e
+
+    #获取元素文本内容
+    def text(self, locator, n=99):
+        element = self.find_element(locator, n)
+        try:
+            return element.text
+        except Exception as e:
+            log.error(f"获取元素{locator}的文本内容失败!")
+            raise e
+
 
     # 元素高亮
     def __highlight(self, element):
